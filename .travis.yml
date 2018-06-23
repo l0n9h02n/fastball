@@ -1,0 +1,18 @@
+language: java
+
+jdk:
+- oraclejdk8
+
+sudo: false
+
+branches:
+  only:
+  - master
+
+stages:
+  - test
+
+jobs:
+  include:
+    - stage: test
+      script: mvn test
