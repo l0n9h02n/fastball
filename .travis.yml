@@ -5,14 +5,14 @@ jdk:
 
 sudo: false
 
-branches:
-  only:
-  - master
+#branches:
+#  only:
+#  - master
 
-stages:
-  - test
+#stages:
+#  - test
 
-jobs:
-  include:
-    - stage: test
-      script: mvn test
+#jobs:
+#  include:
+#    - stage: test
+#      script: mvn test
