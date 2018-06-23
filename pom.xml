@@ -198,7 +198,7 @@
                         <arg>-Xep:CollectionToArraySafeParameter:ERROR</arg>
                         <arg>-Xep:CollectorShouldNotUseState:ERROR</arg>
                         <arg>-Xep:ComparableAndComparator:ERROR</arg>
-                        <arg>-Xep:DateFormatConstant:ERROR</arg>
+                        <!--<arg>-Xep:DateFormatConstant:ERROR</arg>-->
                         <arg>-Xep:DefaultCharset:ERROR</arg>
                         <arg>-Xep:DoubleCheckedLocking:ERROR</arg>
                         <arg>-Xep:EqualsHashCode:ERROR</arg>
