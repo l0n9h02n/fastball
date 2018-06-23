@@ -311,7 +311,7 @@
                         <arg>-Xep:ReturnMissingNullable:ERROR</arg>
                         <arg>-Xep:SwitchDefault:ERROR</arg>
                         <arg>-Xep:ThrowsUncheckedException:ERROR</arg>
-                        <arg>-Xep:TypeParameterNaming:ERROR</arg>
+                        <!--<arg>-Xep:TypeParameterNaming:ERROR</arg>-->
                         <arg>-Xep:UngroupedOverloads:ERROR</arg>
                         <arg>-Xep:UnnecessarySetDefault:ERROR</arg>
                         <arg>-Xep:UnnecessaryStaticImport:ERROR</arg>
