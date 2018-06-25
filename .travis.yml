@@ -28,7 +28,6 @@ install:
 
 ## Build and release to maven central
 script:
-    mvn cobertura:cobertura
     mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
 after_success:
 - bash <(curl -s https://codecov.io/bash)
