@@ -9,8 +9,8 @@ deploy:
   provider: script
   script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
   skip_cleanup: true
-#  on:
-#    tags: true
+  on:
+    tags: false
 
 #install: mvn install -P !build-extras -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: "mvn cobertura:cobertura"
