@@ -390,6 +390,7 @@
             <url>packagecloud+https://packagecloud.io/l0n9h02n/fastball</url>
         </snapshotRepository>
     </distributionManagement>
+    <!--
     <profiles>
         <profile>
             <id>sign</id>
@@ -449,4 +450,5 @@
             </build>
         </profile>
     </profiles>
+    -->
 </project>
