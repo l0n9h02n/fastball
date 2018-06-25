@@ -1,4 +1,4 @@
-package org.longhorn.fastball.time;
+package com.github.longhorn.fastball.time;
 
 import org.junit.Test;
 
