@@ -75,7 +75,7 @@ public class Clock {
      *
      * @param iso8601 ISO-8601 time
      * @return Clock instance of given time
-     * @throws ParseException
+     * @throws ParseException Parse Exception will be thrown if the input is invalid
      */
     public static Clock fromIso8601(String iso8601) throws ParseException {
         @Var SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_FORMAT);
