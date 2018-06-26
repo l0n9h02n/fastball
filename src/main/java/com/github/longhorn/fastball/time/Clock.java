@@ -1,6 +1,7 @@
 package com.github.longhorn.fastball.time;
 
 import com.github.longhorn.fastball.time.enums.Seconds;
+import com.google.errorprone.annotations.Var;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,7 +58,7 @@ public class Clock {
      * @param unixTs unix timestamp
      * @return Clock instance of given time.
      */
-    public static Clock fromUnixTs(String unixTs) {
+    public static Clock fromUnixTs(@Var String unixTs) {
         if (unixTs.length() <= UNIX_TS_WITHOUT_MILLIS_LENGTH) {
             long unixTsWithMillis = (long) (Long.valueOf(unixTs) / Seconds.Companion.getMILLISECOND());
             unixTs = String.valueOf(unixTsWithMillis);

@@ -1,5 +1,6 @@
 package com.github.longhorn.fastball.time;
 
+import com.google.errorprone.annotations.Var;
 import org.junit.Test;
 
 import java.util.TimeZone;
@@ -40,7 +41,7 @@ public class ClockTest {
     @Test
     public void testGetIso8601MillisFromUnixTs() {
         // integer
-        Clock clock = Clock.fromUnixTs(1529982199);
+        @Var Clock clock = Clock.fromUnixTs(1529982199);
         assertThat(clock.getIso8601Millis()).isEqualTo("2018-06-26T03:03:19.000Z");
         // long
         clock = Clock.fromUnixTs(1529982199L);
@@ -53,7 +54,7 @@ public class ClockTest {
     @Test
     public void testGetIso8601FromUnixTs() {
         // integer
-        Clock clock = Clock.fromUnixTs(1529982199);
+        @Var Clock clock = Clock.fromUnixTs(1529982199);
         assertThat(clock.getIso8601()).isEqualTo("2018-06-26T03:03:19Z");
         // long
         clock = Clock.fromUnixTs(1529982199L);
