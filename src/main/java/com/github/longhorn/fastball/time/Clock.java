@@ -19,7 +19,7 @@ public class Clock {
     private TimeZone defaultTimeZone = TimeZone.getTimeZone("UTC");
 
     /**
-     * Private constructor, initial the instance with unix timestamp
+     * Private constructor, initial the instance with unix timestamp.
      *
      * @param unixTs unix timestamp
      */

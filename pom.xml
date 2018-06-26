@@ -18,6 +18,7 @@
         <!--<kotlin.compiler.incremental>true</kotlin.compiler.incremental>-->
         <kotlin.version>1.2.31</kotlin.version>
         <guava.version>22.0</guava.version>
+        <commons-lang.version>2.6</commons-lang.version>
         <truth.version>0.34</truth.version>
     </properties>
     <issueManagement>
@@ -61,6 +62,12 @@
             <version>${guava.version}</version>
         </dependency>
         <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.truth/truth -->
+        <dependency>
             <groupId>com.google.truth</groupId>
             <artifactId>truth</artifactId>
             <version>${truth.version}</version>
@@ -70,13 +77,6 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.truth/truth -->
-        <dependency>
-            <groupId>com.google.truth</groupId>
-            <artifactId>truth</artifactId>
-            <version>0.41</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
