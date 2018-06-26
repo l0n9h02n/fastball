@@ -3,11 +3,13 @@ package com.github.longhorn.fastball.time;
 import com.google.errorprone.annotations.Var;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.fail;
 
 public class ClockTest {
 
@@ -68,6 +70,23 @@ public class ClockTest {
     }
 
     @Test
+    public void testGetUnixTsFromIso8601() {
+        try {
+            @Var Clock clock = Clock.fromIso8601("2018-06-26T03:03:19Z");
+            assertThat(clock.getUnixTs()).isEqualTo(1529982199L);
+            clock = Clock.fromIso8601("2018-06-26T03:03:19.123Z");
+            assertThat(clock.getUnixTsMilli()).isEqualTo(1529982199123L);
+            clock = Clock.fromIso8601("2018-06-26T11:03:19+08:00");
+            assertThat(clock.getUnixTs()).isEqualTo(1529982199L);
+            clock = Clock.fromIso8601("2018-06-26T11:03:19.123+08:00");
+            assertThat(clock.getUnixTsMilli()).isEqualTo(1529982199123L);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
     public void testGetIso8601MillisFromUnixTs() {
         // integer
         @Var Clock clock = Clock.fromUnixTs(1529982199);
@@ -93,4 +112,50 @@ public class ClockTest {
         assertThat(clock.getIso8601()).isEqualTo("2018-06-26T03:03:19Z");
     }
 
+    @Test
+    public void testGetSqlTs() {
+        Clock clock = Clock.fromUnixTs(1529982199);
+        assertThat(clock.getSqlTs()).isEqualTo("2018-06-26 03:03:19");
+        assertThat(clock.getSqlTs(TimeZone.getTimeZone("Asia/Taipei"))).isEqualTo("2018-06-26 11:03:19");
+    }
+
+    @Test
+    public void testIsEqualTo() {
+        assertThat(Clock.fromUnixTs(1529982199).isEqualTo(Clock.fromUnixTs(1529982199))).isTrue();
+        assertThat(Clock.fromUnixTs(1529982199).isEqualTo(Clock.fromUnixTs(1529982200))).isFalse();
+    }
+
+    @Test
+    public void testIsAtBeginOfDay() {
+        try {
+            @Var Clock clock = Clock.fromIso8601("2018-06-26T00:00:00Z");
+            assertThat(clock.isAtBeginOfDay()).isTrue();
+            clock = Clock.fromIso8601("2018-06-26T00:00:01Z");
+            assertThat(clock.isAtBeginOfDay()).isFalse();
+            clock = Clock.fromIso8601("2018-06-26T00:00:00+08:00");
+            assertThat(clock.isAtBeginOfDay()).isFalse();
+            clock = Clock.fromIso8601("2018-06-26T00:00:00+08:00");
+            assertThat(clock.isAtBeginOfDay(TimeZone.getTimeZone("Asia/Taipei"))).isTrue();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testIsAtEndOfDay() {
+        try {
+            @Var Clock clock = Clock.fromIso8601("2018-06-26T23:59:59Z");
+            assertThat(clock.isAtEndOfDay()).isTrue();
+            clock = Clock.fromIso8601("2018-06-26T00:00:01Z");
+            assertThat(clock.isAtEndOfDay()).isFalse();
+            clock = Clock.fromIso8601("2018-06-26T23:59:59+08:00");
+            assertThat(clock.isAtEndOfDay()).isFalse();
+            clock = Clock.fromIso8601("2018-06-26T23:59:59+08:00");
+            assertThat(clock.isAtEndOfDay(TimeZone.getTimeZone("Asia/Taipei"))).isTrue();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 }
