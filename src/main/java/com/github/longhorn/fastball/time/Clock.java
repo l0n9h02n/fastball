@@ -78,7 +78,7 @@ public class Clock {
      * @throws ParseException
      */
     public static Clock fromIso8601(String iso8601) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_FORMAT);
+        @Var SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_FORMAT);
         sdf.setLenient(false);
         try {
             return new Clock(sdf.parse(iso8601).getTime());
