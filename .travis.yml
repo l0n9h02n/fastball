@@ -2,11 +2,13 @@ language: java
 jdk:
 - oraclejdk8
 sudo: false
+branches:
+  only:
+  - master
 before_deploy:
 - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
 - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep
   -v '\[')
-#script: mvn cobertura:cobertura
 cache:
   directories:
   - "~/.m2/repository"
@@ -21,15 +23,14 @@ deploy:
     repo: l0n9h02n/fastball
   name: $project_version
 before_install:
-    - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-    - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 install:
     mvn --settings .maven.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 
 ## Build and release to maven central
 script:
-#    - mvn cobertura:cobertura
-    - mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
+  - mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
 after_success:
 - mvn cobertura:cobertura
 - bash <(curl -s https://codecov.io/bash)
