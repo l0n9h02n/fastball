@@ -5,7 +5,7 @@
 
     <groupId>com.github.l0n9h02n</groupId>
     <artifactId>fastball</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
     <name>fastball: JVM libraries</name>
     <description>Frequency used JVM libraries</description>

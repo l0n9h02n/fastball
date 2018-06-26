@@ -67,6 +67,43 @@ public class Clock {
     }
 
     /**
+     * Get unix timestamp of the Clock
+     *
+     * @return long of the unix timestamp
+     */
+    public long getUnixTs() {
+        return (long) (unixTs * Seconds.Companion.getMILLISECOND());
+    }
+
+    /**
+     * Get unix timestamp with millisecond of the Clock
+     *
+     * @return long of the unix timestamp
+     */
+    public long getUnixTsMilli() {
+        return unixTs;
+    }
+
+    /**
+     * Get unix timestamp of the Clock
+     *
+     * @return String of the unix timestamp
+     */
+    public String getUnixTsString() {
+        long unixTsWithMillis = (long) (unixTs * Seconds.Companion.getMILLISECOND());
+        return String.valueOf(unixTsWithMillis);
+    }
+
+    /**
+     * Get unix timestamp with millisecond of the Clock
+     *
+     * @return String of the unix timestamp
+     */
+    public String getUnixTsMilliString() {
+        return String.valueOf(unixTs);
+    }
+
+    /**
      * Get the ISO-8601 format time with millisecond of the instance.
      *
      * @return String of the ISO-8601 format time of the instance
