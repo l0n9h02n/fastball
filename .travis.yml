@@ -2,18 +2,6 @@ language: java
 jdk:
 - oraclejdk8
 sudo: false
-stages:
-  - test
-  - name: deploy
-  - codecov
-jobs:
-  include:
-    - stage: test
-      script: mvn test
-    - stage:
-      script:
-        - mvn cobertura:cobertura
-        - bash <(curl -s https://codecov.io/bash)
 before_deploy:
 - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
 - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep
@@ -40,7 +28,7 @@ install:
 
 ## Build and release to maven central
 script:
-#    - mvn cobertura:cobertura
+    - mvn cobertura:cobertura
     - mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
-#after_success:
-#- bash <(curl -s https://codecov.io/bash)
+after_success:
+- bash <(curl -s https://codecov.io/bash)
