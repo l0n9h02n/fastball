@@ -84,7 +84,7 @@ public class PeriodTest {
             ).isFalse();
             assertThat(
                     Period.parse("2017-01-01T00:00:00.000Z/2017-01-31T23:59:59.999Z")
-                            .isWholeMonth(TimeZone.getTimeZone("Z"))
+                            .isWholeMonth(TimeZone.getTimeZone("UTC"))
             ).isTrue();
             assertThat(
                     Period.parse("2017-01-01/2017-01-31")
