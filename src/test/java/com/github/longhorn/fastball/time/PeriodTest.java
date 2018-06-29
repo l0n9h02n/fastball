@@ -43,21 +43,6 @@ public class PeriodTest {
     }
 
     @Test
-    public void testIsMeetDuration() {
-        try {
-            assertThat(Period.parse("2017-01-01T00:00:00+08:00").isMeetDuration(TimeUnit.DAYS, 1)).isFalse();
-            assertThat(Period.parse("2017-01-01T00:00:00.000+08:00").isMeetDuration(TimeUnit.DAYS, 1)).isFalse();
-            assertThat(Period.parse("2017-01-01T00:00:00+08:00/2017-01-02T00:00:00+08:00").isMeetDuration(TimeUnit.DAYS, 1)).isTrue();
-            assertThat(Period.parse("2017-01-01T00:00:00+08:00/2017-01-02T00:00:01+08:00").isMeetDuration(TimeUnit.DAYS, 1)).isFalse();
-            assertThat(Period.parse("2017-01-01T00:00:00.000+08:00/2017-01-02T00:00:00.000+08:00").isMeetDuration(TimeUnit.DAYS, 1)).isTrue();
-            assertThat(Period.parse("2017-01-01T00:00:00.000+08:00/2017-01-02T00:00:01.000+08:00").isMeetDuration(TimeUnit.DAYS, 1)).isFalse();
-        } catch (ParseException e) {
-            System.err.println(ExceptionUtils.getFullStackTrace(e));
-            fail();
-        }
-    }
-
-    @Test
     public void testIsWholeMonth() {
         try {
             assertThat(
@@ -90,6 +75,39 @@ public class PeriodTest {
                     Period.parse("2017-01-01/2017-01-31")
                             .isWholeMonth(TimeZone.getTimeZone("Asia/Taipei"))
             ).isTrue();
+        } catch (ParseException e) {
+            System.err.println(ExceptionUtils.getFullStackTrace(e));
+            fail();
+        }
+    }
+
+    @Test
+    public void testIsTalliedWithDuration() {
+        try {
+            assertThat(
+                    Period.parse("2017-01-01T00:00:00+08:00")
+                            .isTalliedWithDuration(TimeUnit.DAYS, 1)
+            ).isFalse();
+            assertThat(
+                    Period.parse("2017-01-01T00:00:00.000+08:00")
+                            .isTalliedWithDuration(TimeUnit.DAYS, 1)
+            ).isFalse();
+            assertThat(
+                    Period.parse("2017-01-01T00:00:00+08:00/2017-01-02T00:00:00+08:00")
+                            .isTalliedWithDuration(TimeUnit.DAYS, 1)
+            ).isTrue();
+            assertThat(
+                    Period.parse("2017-01-01T00:00:00+08:00/2017-01-02T00:00:01+08:00")
+                            .isTalliedWithDuration(TimeUnit.DAYS, 1)
+            ).isFalse();
+            assertThat(
+                    Period.parse("2017-01-01T00:00:00.000+08:00/2017-01-02T00:00:00.000+08:00")
+                            .isTalliedWithDuration(TimeUnit.DAYS, 1)
+            ).isTrue();
+            assertThat(
+                    Period.parse("2017-01-01T00:00:00.000+08:00/2017-01-02T00:00:01.000+08:00")
+                            .isTalliedWithDuration(TimeUnit.DAYS, 1)
+            ).isFalse();
         } catch (ParseException e) {
             System.err.println(ExceptionUtils.getFullStackTrace(e));
             fail();

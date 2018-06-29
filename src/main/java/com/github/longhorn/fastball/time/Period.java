@@ -52,7 +52,7 @@ public class Period {
      * Create an instance by a period string.
      *
      * @param period period string, we support the following formats currently:
-     *               1. exacted>
+     *               1. exacted
      *               2. start/end
      *               3. start/duration
      * @return Period instance
@@ -210,7 +210,7 @@ public class Period {
      * @param duration duration
      * @return Boolean of the result
      */
-    public boolean isMeetDuration(TimeUnit timeUnit, long duration) {
+    public boolean isTalliedWithDuration(TimeUnit timeUnit, long duration) {
         if (null == start || null == end) {
             return false;
         }
