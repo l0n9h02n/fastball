@@ -5,6 +5,8 @@ import com.google.errorprone.annotations.Var;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -15,16 +17,18 @@ public class Clock {
     private static final String SQL_TS_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final String BEGIN_OF_DAY_DEFINE = "T00:00:00";
     private static final String END_OF_DAY_DEFINE = "T23:59:59";
+    private long unixTsMilli;
     private long unixTs;
     private TimeZone defaultTimeZone = TimeZone.getTimeZone("UTC");
 
     /**
      * Private constructor, initial the instance with unix timestamp.
      *
-     * @param unixTs unix timestamp
+     * @param unixTsMilli unix timestamp with millisecond
      */
-    private Clock(long unixTs) {
-        this.unixTs = unixTs;
+    private Clock(long unixTsMilli) {
+        this.unixTsMilli = unixTsMilli;
+        unixTs = (long) (unixTsMilli * Seconds.Companion.getMILLISECOND());
     }
 
     /**
@@ -78,42 +82,36 @@ public class Clock {
      * @throws ParseException Parse Exception will be thrown if the input is invalid
      */
     public static Clock fromIso8601(String iso8601) throws ParseException {
-        @Var SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_FORMAT);
-        sdf.setLenient(false);
-        try {
-            return new Clock(sdf.parse(iso8601).getTime());
-        } catch (ParseException e) {
-            sdf = new SimpleDateFormat(ISO_8601_FORMAT_WITH_MILLISECOND);
-            return new Clock((sdf.parse(iso8601).getTime()));
-        }
+        return new Clock(
+                ZonedDateTime.parse(iso8601, DateTimeFormatter.ISO_OFFSET_DATE_TIME).toInstant().toEpochMilli()
+        );
     }
 
     /**
-     * Get unix timestamp of the Clock
+     * Get epoch second.
      *
-     * @return long of the unix timestamp
+     * @return long of the epoch second
      */
-    public long getUnixTs() {
-        return (long) (unixTs * Seconds.Companion.getMILLISECOND());
-    }
-
-    /**
-     * Get unix timestamp with millisecond of the Clock
-     *
-     * @return long of the unix timestamp
-     */
-    public long getUnixTsMilli() {
+    public long getEpochSecond() {
         return unixTs;
     }
 
     /**
-     * Get unix timestamp of the Clock
+     * Get epoch second string.
      *
      * @return String of the unix timestamp
      */
-    public String getUnixTsString() {
-        long unixTsWithMillis = (long) (unixTs * Seconds.Companion.getMILLISECOND());
-        return String.valueOf(unixTsWithMillis);
+    public String getEpochSecondString() {
+        return String.valueOf(getEpochSecond());
+    }
+
+    /**
+     * Get epoch millisecond.
+     *
+     * @return long of the unix timestamp
+     */
+    public long toEpochMilli() {
+        return unixTsMilli;
     }
 
     /**
@@ -121,30 +119,8 @@ public class Clock {
      *
      * @return String of the unix timestamp
      */
-    public String getUnixTsMilliString() {
-        return String.valueOf(unixTs);
-    }
-
-    /**
-     * Get the ISO-8601 format time with millisecond of the instance.
-     *
-     * @return String of the ISO-8601 format time of the instance
-     */
-    public String getIso8601Millis() {
-        return getIso8601Millis(defaultTimeZone);
-    }
-
-    /**
-     * Get the ISO-8601 format time with millisecond of the instance.
-     *
-     * @param timeZone TimeZone
-     * @return String of the ISO-8601 format time of the instance
-     */
-    public String getIso8601Millis(TimeZone timeZone) {
-        SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_FORMAT_WITH_MILLISECOND);
-        sdf.setTimeZone(timeZone);
-        sdf.setLenient(false);
-        return sdf.format(new Date(unixTs));
+    public String toEpochMilliString() {
+        return String.valueOf(unixTsMilli);
     }
 
     /**
@@ -166,7 +142,29 @@ public class Clock {
         SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_FORMAT);
         sdf.setTimeZone(timeZone);
         sdf.setLenient(false);
-        return sdf.format(new Date(unixTs));
+        return sdf.format(new Date(unixTsMilli));
+    }
+
+    /**
+     * Get the ISO-8601 format time with millisecond of the instance.
+     *
+     * @return String of the ISO-8601 format time of the instance
+     */
+    public String getIso8601Millis() {
+        return getIso8601Millis(defaultTimeZone);
+    }
+
+    /**
+     * Get the ISO-8601 format time with millisecond of the instance.
+     *
+     * @param timeZone TimeZone
+     * @return String of the ISO-8601 format time of the instance
+     */
+    public String getIso8601Millis(TimeZone timeZone) {
+        SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_FORMAT_WITH_MILLISECOND);
+        sdf.setTimeZone(timeZone);
+        sdf.setLenient(false);
+        return sdf.format(new Date(unixTsMilli));
     }
 
     /**
@@ -188,7 +186,7 @@ public class Clock {
         SimpleDateFormat sdf = new SimpleDateFormat(SQL_TS_FORMAT);
         sdf.setTimeZone(timeZone);
         sdf.setLenient(false);
-        return sdf.format(new Date(unixTs));
+        return sdf.format(new Date(unixTsMilli));
     }
 
     /**
@@ -198,7 +196,7 @@ public class Clock {
      * @return Boolean of the result
      */
     public boolean isEqualTo(Clock clock) {
-        return getUnixTsMilli() == clock.getUnixTsMilli();
+        return toEpochMilli() == clock.toEpochMilli();
     }
 
     /**
@@ -227,7 +225,6 @@ public class Clock {
      */
     public boolean isAtEndOfDay() {
         return getIso8601().contains(END_OF_DAY_DEFINE);
-
     }
 
     /**

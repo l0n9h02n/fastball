@@ -14,34 +14,34 @@ import static org.junit.Assert.fail;
 public class ClockTest {
 
     @Test
-    public void testGetUnixTs() {
+    public void testGetEpochSecond() {
         Clock clock = Clock.fromNow();
         Pattern pattern = Pattern.compile("^\\d{10}$");
-        Matcher matcher = pattern.matcher(String.valueOf(clock.getUnixTs()));
+        Matcher matcher = pattern.matcher(String.valueOf(clock.getEpochSecond()));
         assertThat(matcher.find()).isTrue();
     }
 
     @Test
-    public void testGetUnixTsMilli() {
-        Clock clock = Clock.fromNow();
-        Pattern pattern = Pattern.compile("^\\d{13}$");
-        Matcher matcher = pattern.matcher(String.valueOf(clock.getUnixTsMilli()));
-        assertThat(matcher.find()).isTrue();
-    }
-
-    @Test
-    public void testGetUnixTsString() {
+    public void testGetEpochSecondString() {
         Clock clock = Clock.fromNow();
         Pattern pattern = Pattern.compile("^\\d{10}$");
-        Matcher matcher = pattern.matcher(clock.getUnixTsString());
+        Matcher matcher = pattern.matcher(clock.getEpochSecondString());
         assertThat(matcher.find()).isTrue();
     }
 
     @Test
-    public void testGetUnixTsMilliString() {
+    public void testToEpochMilli() {
         Clock clock = Clock.fromNow();
         Pattern pattern = Pattern.compile("^\\d{13}$");
-        Matcher matcher = pattern.matcher(clock.getUnixTsMilliString());
+        Matcher matcher = pattern.matcher(String.valueOf(clock.toEpochMilli()));
+        assertThat(matcher.find()).isTrue();
+    }
+
+    @Test
+    public void testToEpochMilliString() {
+        Clock clock = Clock.fromNow();
+        Pattern pattern = Pattern.compile("^\\d{13}$");
+        Matcher matcher = pattern.matcher(clock.toEpochMilliString());
         assertThat(matcher.find()).isTrue();
     }
 
@@ -72,14 +72,38 @@ public class ClockTest {
     @Test
     public void testGetUnixTsFromIso8601() {
         try {
+            // from UTC without millisecond
             @Var Clock clock = Clock.fromIso8601("2018-06-26T03:03:19Z");
-            assertThat(clock.getUnixTs()).isEqualTo(1529982199L);
+            assertThat(clock.getEpochSecond()).isEqualTo(1529982199L);
+            assertThat(clock.toEpochMilli()).isEqualTo(1529982199000L);
+            // from UTC with millisecond
             clock = Clock.fromIso8601("2018-06-26T03:03:19.123Z");
-            assertThat(clock.getUnixTsMilli()).isEqualTo(1529982199123L);
+            assertThat(clock.getEpochSecond()).isEqualTo(1529982199L);
+            assertThat(clock.toEpochMilli()).isEqualTo(1529982199123L);
+            // from Asia/Taipei without millisecond
             clock = Clock.fromIso8601("2018-06-26T11:03:19+08:00");
-            assertThat(clock.getUnixTs()).isEqualTo(1529982199L);
+            assertThat(clock.getEpochSecond()).isEqualTo(1529982199L);
+            assertThat(clock.toEpochMilli()).isEqualTo(1529982199000L);
+            // from Asia/Taipei with millisecond
             clock = Clock.fromIso8601("2018-06-26T11:03:19.123+08:00");
-            assertThat(clock.getUnixTsMilli()).isEqualTo(1529982199123L);
+            assertThat(clock.getEpochSecond()).isEqualTo(1529982199L);
+            assertThat(clock.toEpochMilli()).isEqualTo(1529982199123L);
+            // from -08:00 without millisecond
+            clock = Clock.fromIso8601("2018-06-26T11:03:19-08:00");
+            assertThat(clock.getEpochSecond()).isEqualTo(1530039799L);
+            assertThat(clock.toEpochMilli()).isEqualTo(1530039799000L);
+            // from -08:00 with millisecond
+            clock = Clock.fromIso8601("2018-06-26T11:03:19.123-08:00");
+            assertThat(clock.getEpochSecond()).isEqualTo(1530039799L);
+            assertThat(clock.toEpochMilli()).isEqualTo(1530039799123L);
+            // from UTC with 1 digit millisecond
+            clock = Clock.fromIso8601("2018-06-26T11:03:19.1Z");
+            assertThat(clock.getEpochSecond()).isEqualTo(1530010999L);
+            assertThat(clock.toEpochMilli()).isEqualTo(1530010999100L);
+            // from UTC with 2 digits millisecond
+            clock = Clock.fromIso8601("2018-06-26T11:03:19.12Z");
+            assertThat(clock.getEpochSecond()).isEqualTo(1530010999L);
+            assertThat(clock.toEpochMilli()).isEqualTo(1530010999120L);
         } catch (ParseException e) {
             e.printStackTrace();
             fail();
@@ -94,6 +118,8 @@ public class ClockTest {
         // long
         clock = Clock.fromUnixTs(1529982199L);
         assertThat(clock.getIso8601Millis()).isEqualTo("2018-06-26T03:03:19.000Z");
+        clock = Clock.fromUnixTs(1529982199123L);
+        assertThat(clock.getIso8601Millis()).isEqualTo("2018-06-26T03:03:19.123Z");
         // string
         clock = Clock.fromUnixTs("1529982199");
         assertThat(clock.getIso8601Millis()).isEqualTo("2018-06-26T03:03:19.000Z");

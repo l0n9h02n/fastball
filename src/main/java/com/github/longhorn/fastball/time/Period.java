@@ -6,6 +6,9 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nullable;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,11 +22,11 @@ import java.util.regex.Pattern;
  */
 public class Period {
     private static final Pattern INIT_PATTERN
-            = Pattern.compile("(?<start>\\d{4}-[\\w-:+]*)(|\\/(?<end>(\\d{4}-[\\w-:+]*)|P\\d{1}\\w*))$");
+            = Pattern.compile("^(?<start>\\d{4}-[\\w-:+.]*)(|\\/(?<end>(\\d{4}-[\\w-:+.]*)|P\\d{1}\\w*))$");
     private static final Pattern CALENDAR_PATTERN
-            = Pattern.compile("^(?<year>\\d{4})\\-(?<month>0+[1-9]|1[012])-(?<day>0+[1-9]|[12]\\d{1}|3[01])(|T(?<hour" +
-            ">0+\\d{1}|1+\\d{1}|2+[0-3]):(?<minute>[0-5]\\d{1}):(?<second>[0-5]\\d{1})(?<timeZone>Z|[+-](0+\\d{1}|1+" +
-            "\\d{1}|2+[0-3]):([0-5]\\d{1})))$");
+            = Pattern.compile("^(?<year>\\d{4})-(?<month>0+[1-9]|1[012])-(?<day>0+[1-9]|[12]\\d{1}|3[01])" +
+            "(|T(?<hour>0+\\d{1}|1+\\d{1}|2+[0-3]):(?<minute>[0-5]\\d{1}):(?<second>[0-5]\\d{1})" +
+            "(|\\.(?<milli>\\d{1,3}))(?<timeZone>Z|[+-](0+\\d{1}|1+\\d{1}|2+[0-3]):([0-5]\\d{1})))$");
     private static final Pattern DURATION_PATTERN
             = Pattern.compile("^P((?<year>\\d*)Y)((?<month>\\d*)M)((?<day>\\d*)D)T((?<hour>\\d*)H)((?<minute>\\d*)M)(" +
             "(?<second>\\d*)S)$");
@@ -48,7 +51,10 @@ public class Period {
     /**
      * Create an instance by a period string.
      *
-     * @param period period string
+     * @param period period string, we support the following formats currently:
+     *               1. <exacted></exacted>
+     *               2. <start>/<end>
+     *               3. <start>/<duration>
      * @return Period instance
      * @throws ParseException Parse Exception will be thrown if the period is invalid
      */
@@ -109,7 +115,7 @@ public class Period {
             String minute = Optional.fromNullable(matcher.group("minute")).or("0");
             String second = Optional.fromNullable(matcher.group("second")).or("0");
             return Clock.fromUnixTs(
-                    startClock.getUnixTs()
+                    startClock.getEpochSecond()
                             + TimeUnit.DAYS.toSeconds(365 * Integer.valueOf(year))
                             + TimeUnit.DAYS.toSeconds(30 * Integer.valueOf(month))
                             + TimeUnit.DAYS.toSeconds(Integer.valueOf(day))
@@ -131,12 +137,34 @@ public class Period {
     }
 
     /**
+     * Set the start clock.
+     *
+     * @param start Start clock.
+     * @return Current instance
+     */
+    public Period setStart(Clock start) {
+        this.start = start;
+        return this;
+    }
+
+    /**
      * Get the end clock.
      *
      * @return End clock
      */
     public Clock getEnd() {
         return end;
+    }
+
+    /**
+     * Set the end clock.
+     *
+     * @param end End clock
+     * @return Current instance
+     */
+    public Period setEnd(Clock end) {
+        this.end = end;
+        return this;
     }
 
     /**
@@ -147,4 +175,46 @@ public class Period {
     public Clock getExacted() {
         return exacted;
     }
+
+    /**
+     * Set the exacted clock.
+     *
+     * @param exacted Exacted clock
+     * @return Current instance
+     */
+    public Period setExacted(Clock exacted) {
+        this.exacted = exacted;
+        return this;
+    }
+
+    /**
+     * Check is the period start at the first and end at the last <b>date</b> of the month.
+     *
+     * @param timeZone time zone
+     * @return Boolean of the result
+     */
+    public boolean isWholeMonth(TimeZone timeZone) {
+        OffsetDateTime s = OffsetDateTime.parse(start.getIso8601(timeZone));
+        OffsetDateTime e = OffsetDateTime.parse(end.getIso8601(timeZone));
+        LocalDate firstDayOfMonth = LocalDate.of(s.getYear(), s.getMonth(), 1);
+        LocalDate lastDayOfMonth
+                = firstDayOfMonth.withDayOfMonth(firstDayOfMonth.getMonth().length(firstDayOfMonth.isLeapYear()));
+        return StringUtils.startsWith(s.toString(), firstDayOfMonth.toString())
+                && StringUtils.startsWith(e.toString(), lastDayOfMonth.toString());
+    }
+
+    /**
+     * Check is the period match the given time unit.
+     *
+     * @param timeUnit TimeUnit
+     * @param duration duration
+     * @return Boolean of the result
+     */
+    public boolean isMeetDuration(TimeUnit timeUnit, long duration) {
+        if (null == start || null == end) {
+            return false;
+        }
+        return (timeUnit.toMillis(duration) == end.toEpochMilli() - start.toEpochMilli());
+    }
+
 }
