@@ -52,9 +52,9 @@ public class Period {
      * Create an instance by a period string.
      *
      * @param period period string, we support the following formats currently:
-     *               1. <exacted></exacted>
-     *               2. <start>/<end>
-     *               3. <start>/<duration>
+     *               1. exacted>
+     *               2. start/end
+     *               3. start/duration
      * @return Period instance
      * @throws ParseException Parse Exception will be thrown if the period is invalid
      */
