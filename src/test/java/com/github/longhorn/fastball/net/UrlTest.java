@@ -1,0 +1,24 @@
+package com.github.longhorn.fastball.net;
+
+import org.junit.Test;
+
+import static com.google.common.truth.Truth.assertThat;
+
+public class UrlTest {
+
+    @Test
+    public void testIsFullyQualifiedURL() {
+        assertThat(UrlKt.isFullyQualifiedURL(null)).isFalse();
+        assertThat(UrlKt.isFullyQualifiedURL("")).isFalse();
+        assertThat(UrlKt.isFullyQualifiedURL("/foo/bar/index.php")).isFalse();
+        assertThat(UrlKt.isFullyQualifiedURL("https://github.com/#foo")).isTrue();
+    }
+
+    @Test
+    public void testGetPathQueryRef() {
+        assertThat(UrlKt.getPathQueryRef("https://github.com/#foo")).isEqualTo("/#foo");
+        assertThat(UrlKt.getPathQueryRef("https://github.com/")).isEqualTo("/");
+        assertThat(UrlKt.getPathQueryRef("https://github.com/abc?a=1&b=2")).isEqualTo("/abc?a=1&b=2");
+        assertThat(UrlKt.getPathQueryRef("/foo/bar/index.php")).isEqualTo("/foo/bar/index.php");
+    }
+}

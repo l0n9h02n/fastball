@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 
 /**
  * This utility parse the input extended format (https://www.loc.gov/standards/datetime/pre-submission.html)\
- * ISO-8601 (https://en.wikipedia.org/wiki/ISO_8601) period to Clock instance. Could be used for further\
- * functionalities. Since there is no time zone be represented in the <b>Years</b>, <b>Week dates</b>,\
- * <b>Ordinal dates</b> expresses, so we supports <b>Calendar dates</b> and <b>Durations</b> with <b>Time intervals</b>\
- * only.
+ * ISO-8601 (https://en.wikipedia.org/wiki/ISO_8601) period to Clock instances. Could be used for further\
+ * functionalities like checking is the period a whole month or matching the excepted duration. Since there is no time \
+ * zone be represented in the <b>Years</b>, <b>Week dates</b>, <b>Ordinal dates</b> expresses, so we supports \
+ * <b>Calendar dates</b> and <b>Durations</b> with <b>Time intervals</b> only.
  */
 public class Period {
     private static final Pattern INIT_PATTERN
