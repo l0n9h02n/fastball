@@ -25,7 +25,7 @@ public class ObjectsTest {
         assertThat(dest.getBars().get(0).getAddress()).isEqualTo("addr");
     }
 
-    public class Foo {
+    public static class Foo {
         private String name;
         private Integer age;
         private List<Bar> bars;
@@ -58,7 +58,7 @@ public class ObjectsTest {
         }
     }
 
-    public class Bar {
+    public static class Bar {
         private String address;
 
         public String getAddress() {

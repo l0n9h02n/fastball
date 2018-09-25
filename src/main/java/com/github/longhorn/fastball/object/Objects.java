@@ -7,7 +7,7 @@ import org.apache.commons.beanutils.PropertyUtilsBean;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class Objects {
+public final class Objects {
     private static final BeanUtilsBean BUB;
 
     static {
@@ -22,6 +22,9 @@ public class Objects {
                 }
             }
         };
+    }
+
+    private Objects() {
     }
 
     /**
