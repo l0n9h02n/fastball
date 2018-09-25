@@ -19,6 +19,7 @@
         <kotlin.version>1.2.31</kotlin.version>
         <guava.version>22.0</guava.version>
         <commons-lang.version>2.6</commons-lang.version>
+        <beanutils.version>1.9.3</beanutils.version>
         <truth.version>0.34</truth.version>
     </properties>
     <issueManagement>
@@ -65,6 +66,11 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${commons-lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${beanutils.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.truth/truth -->
         <dependency>

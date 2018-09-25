@@ -28,7 +28,7 @@ public class Clock {
      */
     private Clock(long unixTsMilli) {
         this.unixTsMilli = unixTsMilli;
-        unixTs = (long) (unixTsMilli * Seconds.Companion.getMILLISECOND());
+        unixTs = (long) (unixTsMilli * Seconds.getMILLISECOND());
     }
 
     /**
@@ -68,7 +68,7 @@ public class Clock {
      */
     public static Clock fromUnixTs(@Var String unixTs) {
         if (unixTs.length() <= UNIX_TS_WITHOUT_MILLIS_LENGTH) {
-            long unixTsWithMillis = (long) (Long.valueOf(unixTs) / Seconds.Companion.getMILLISECOND());
+            long unixTsWithMillis = (long) (Long.valueOf(unixTs) / Seconds.getMILLISECOND());
             unixTs = String.valueOf(unixTsWithMillis);
         }
         return new Clock(Long.parseLong(unixTs));
