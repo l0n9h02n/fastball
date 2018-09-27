@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.fail;
 
 public class ObjectsTest {
     @Test
@@ -17,8 +18,10 @@ public class ObjectsTest {
             Objects.merge(dest, src);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+            fail();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            fail();
         }
         assertThat(dest.getName()).isEqualTo("name");
         assertThat(dest.getAge()).isEqualTo(18);
