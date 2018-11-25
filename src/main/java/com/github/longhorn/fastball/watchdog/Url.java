@@ -5,7 +5,10 @@ import org.apache.commons.lang.StringUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Url {
+public final class Url {
+    private Url() {
+    }
+
     /**
      * Check is the input a fully qualified URL.
      *
