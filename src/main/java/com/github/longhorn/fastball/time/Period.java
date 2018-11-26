@@ -34,6 +34,7 @@ public class Period {
     private Clock start;
     private Clock end;
     private Clock exacted;
+    private String period;
 
     /**
      * Private constructor, initial the instance with start, end, and exacted Clock.
@@ -42,10 +43,11 @@ public class Period {
      * @param end     end clock
      * @param exacted exacted clock
      */
-    private Period(Clock start, Clock end, Clock exacted) {
+    private Period(Clock start, Clock end, Clock exacted, String period) {
         this.start = start;
         this.end = end;
         this.exacted = exacted;
+        this.period = period;
     }
 
     /**
@@ -75,7 +77,7 @@ public class Period {
         } else {
             throw new IllegalArgumentException("Invalid period");
         }
-        return new Period(startClock, endClock, exactedClock);
+        return new Period(startClock, endClock, exactedClock, period);
     }
 
     /**
@@ -217,4 +219,13 @@ public class Period {
         return (timeUnit.toMillis(duration) == end.toEpochMilli() - start.toEpochMilli());
     }
 
+    /**
+     * Get the raw period string.
+     *
+     * @return String of the raw period
+     */
+    @Override
+    public String toString() {
+        return period;
+    }
 }

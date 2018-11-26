@@ -9,6 +9,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class PeriodTest {
@@ -21,6 +22,7 @@ public class PeriodTest {
             assertThat(p.getStart()).isNull();
             assertThat(p.getEnd()).isNull();
             assertThat(p.getExacted().getIso8601()).isEqualTo("2017-01-01T08:00:00Z");
+            assertThat(p.toString()).isEqualTo("2017-01-01T00:00:00-08:00");
             // <exacted> +08:00
             p = Period.parse("2017-01-01T00:00:00+08:00");
             assertThat(p.getStart()).isNull();
