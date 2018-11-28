@@ -42,3 +42,19 @@ fun getPathQueryRef(input: String): String {
     return url.path + query + ref
 }
 
+/**
+ * Check is the input a fully qualified URL.
+ *
+ * @param testee input
+ */
+fun assertFullyQualified(testee: String) {
+    if (StringUtils.isBlank(testee)) {
+        throw IllegalArgumentException("empty input")
+    }
+    try {
+        URL(testee)
+    } catch (e: MalformedURLException) {
+        throw IllegalArgumentException(String.format("%s isn't a fully qualified URL", testee))
+    }
+
+}
