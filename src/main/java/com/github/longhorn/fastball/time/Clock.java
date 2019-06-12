@@ -1,6 +1,5 @@
 package com.github.longhorn.fastball.time;
 
-import com.github.longhorn.fastball.time.enums.Seconds;
 import com.google.errorprone.annotations.Var;
 
 import java.text.ParseException;
@@ -9,6 +8,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class Clock {
     private static final int UNIX_TS_WITHOUT_MILLIS_LENGTH = 10;
@@ -17,9 +17,9 @@ public class Clock {
     private static final String SQL_TS_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final String BEGIN_OF_DAY_DEFINE = "T00:00:00";
     private static final String END_OF_DAY_DEFINE = "T23:59:59";
+    private static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getTimeZone("UTC");
     private long unixTsMilli;
     private long unixTs;
-    private TimeZone defaultTimeZone = TimeZone.getTimeZone("UTC");
 
     /**
      * Private constructor, initial the instance with unix timestamp.
@@ -28,7 +28,7 @@ public class Clock {
      */
     private Clock(long unixTsMilli) {
         this.unixTsMilli = unixTsMilli;
-        unixTs = (long) (unixTsMilli * Seconds.getMILLISECOND());
+        unixTs = unixTsMilli / TimeUnit.SECONDS.toMillis(1);
     }
 
     /**
@@ -68,7 +68,7 @@ public class Clock {
      */
     public static Clock fromUnixTs(@Var String unixTs) {
         if (unixTs.length() <= UNIX_TS_WITHOUT_MILLIS_LENGTH) {
-            long unixTsWithMillis = (long) (Long.valueOf(unixTs) / Seconds.getMILLISECOND());
+            long unixTsWithMillis = Long.valueOf(unixTs) * TimeUnit.SECONDS.toMillis(1);
             unixTs = String.valueOf(unixTsWithMillis);
         }
         return new Clock(Long.parseLong(unixTs));
@@ -85,6 +85,28 @@ public class Clock {
         return new Clock(
                 ZonedDateTime.parse(iso8601, DateTimeFormatter.ISO_OFFSET_DATE_TIME).toInstant().toEpochMilli()
         );
+    }
+
+    /**
+     * Turn the clock forward.
+     *
+     * @param timeUnit time unit
+     * @param interval how many time unit you wanna adjust
+     * @return Clock instance of turned time
+     */
+    public Clock turnForward(TimeUnit timeUnit, int interval) {
+        return new Clock(this.unixTsMilli + timeUnit.toMillis(interval));
+    }
+
+    /**
+     * Turn the clock back.
+     *
+     * @param timeUnit time unit
+     * @param interval how many time unit you wanna adjust
+     * @return Clock instance of turned time
+     */
+    public Clock turnBack(TimeUnit timeUnit, int interval) {
+        return new Clock(this.unixTsMilli - timeUnit.toMillis(interval));
     }
 
     /**
@@ -129,7 +151,7 @@ public class Clock {
      * @return String of the ISO-8601 format time of the instance
      */
     public String getIso8601() {
-        return getIso8601(defaultTimeZone);
+        return getIso8601(DEFAULT_TIME_ZONE);
     }
 
     /**
@@ -151,7 +173,7 @@ public class Clock {
      * @return String of the ISO-8601 format time of the instance
      */
     public String getIso8601Millis() {
-        return getIso8601Millis(defaultTimeZone);
+        return getIso8601Millis(DEFAULT_TIME_ZONE);
     }
 
     /**
@@ -173,7 +195,7 @@ public class Clock {
      * @return String of SQL timestamp of the instance.
      */
     public String getSqlTs() {
-        return getSqlTs(defaultTimeZone);
+        return getSqlTs(DEFAULT_TIME_ZONE);
     }
 
     /**
@@ -184,6 +206,27 @@ public class Clock {
      */
     public String getSqlTs(TimeZone timeZone) {
         SimpleDateFormat sdf = new SimpleDateFormat(SQL_TS_FORMAT);
+        return getCustomFormat(sdf, timeZone);
+    }
+
+    /**
+     * Get customized format string.
+     *
+     * @param sdf SimpleDateFormat instance
+     * @return String of the customized timestamp
+     */
+    public String getCustomFormat(SimpleDateFormat sdf) {
+        return getCustomFormat(sdf, DEFAULT_TIME_ZONE);
+    }
+
+    /**
+     * Get customized format string.
+     *
+     * @param sdf      SimpleDateFormat
+     * @param timeZone TimeZone
+     * @return String of the customized timestamp
+     */
+    public String getCustomFormat(SimpleDateFormat sdf, TimeZone timeZone) {
         sdf.setTimeZone(timeZone);
         sdf.setLenient(false);
         return sdf.format(new Date(unixTsMilli));

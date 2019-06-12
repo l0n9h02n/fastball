@@ -4,7 +4,9 @@ import com.google.errorprone.annotations.Var;
 import org.junit.Test;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +14,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
 public class ClockTest {
-
     @Test
     public void testGetEpochSecond() {
         Clock clock = Clock.fromNow();
@@ -146,6 +147,13 @@ public class ClockTest {
     }
 
     @Test
+    public void testGetCustomFormat() {
+        Clock clock = Clock.fromUnixTs(1529982199);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        assertThat(clock.getCustomFormat(sdf)).isEqualTo("2018-06-26 03:03");
+    }
+
+    @Test
     public void testIsEqualTo() {
         assertThat(Clock.fromUnixTs(1529982199).isEqualTo(Clock.fromUnixTs(1529982199))).isTrue();
         assertThat(Clock.fromUnixTs(1529982199).isEqualTo(Clock.fromUnixTs(1529982200))).isFalse();
@@ -183,5 +191,19 @@ public class ClockTest {
             e.printStackTrace();
             fail();
         }
+    }
+
+    @Test
+    public void testTurnForward() {
+        Clock now = Clock.fromNow();
+        Clock turned = now.turnForward(TimeUnit.SECONDS, 1);
+        assertThat(turned.toEpochMilli() - now.toEpochMilli()).isEqualTo(1000);
+    }
+
+    @Test
+    public void testTurnBack() {
+        Clock now = Clock.fromNow();
+        Clock turned = now.turnBack(TimeUnit.SECONDS, 1);
+        assertThat(turned.toEpochMilli() - now.toEpochMilli()).isEqualTo(-1000);
     }
 }
