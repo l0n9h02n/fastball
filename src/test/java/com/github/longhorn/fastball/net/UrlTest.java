@@ -1,6 +1,6 @@
 package com.github.longhorn.fastball.net;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;

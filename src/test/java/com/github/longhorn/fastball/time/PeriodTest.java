@@ -1,7 +1,7 @@
 package com.github.longhorn.fastball.time;
 
 import com.google.errorprone.annotations.Var;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -38,7 +38,7 @@ public class PeriodTest {
             assertThat(p.getEnd().getIso8601()).isEqualTo("2018-04-06T06:07:30Z");
             assertThat(p.getExacted()).isNull();
         } catch (ParseException e) {
-            System.err.println(ExceptionUtils.getFullStackTrace(e));
+            System.err.println(ExceptionUtils.getStackTrace(e));
             fail();
         }
     }
@@ -77,7 +77,7 @@ public class PeriodTest {
                             .isWholeMonth(TimeZone.getTimeZone("Asia/Taipei"))
             ).isTrue();
         } catch (ParseException e) {
-            System.err.println(ExceptionUtils.getFullStackTrace(e));
+            System.err.println(ExceptionUtils.getStackTrace(e));
             fail();
         }
     }
@@ -110,7 +110,7 @@ public class PeriodTest {
                             .isTalliedWithDuration(TimeUnit.DAYS, 1)
             ).isFalse();
         } catch (ParseException e) {
-            System.err.println(ExceptionUtils.getFullStackTrace(e));
+            System.err.println(ExceptionUtils.getStackTrace(e));
             fail();
         }
     }
