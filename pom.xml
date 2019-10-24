@@ -5,7 +5,7 @@
 
     <groupId>com.github.l0n9h02n</groupId>
     <artifactId>fastball</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
     <name>fastball: JVM libraries</name>
     <description>Frequency used JVM libraries</description>
@@ -18,7 +18,7 @@
         <!--<kotlin.compiler.incremental>true</kotlin.compiler.incremental>-->
         <kotlin.version>1.2.31</kotlin.version>
         <guava.version>22.0</guava.version>
-        <commons-lang.version>2.6</commons-lang.version>
+        <commons-lang3.version>3.9</commons-lang3.version>
         <beanutils.version>1.9.3</beanutils.version>
         <javax.ws.rs-api.version>2.1.1</javax.ws.rs-api.version>
         <jersey-common.version>2.27</jersey-common.version>
@@ -64,10 +64,11 @@
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>${commons-lang.version}</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
