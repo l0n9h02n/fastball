@@ -1,14 +1,13 @@
 language: java
 jdk:
-- oraclejdk8
+  - oraclejdk8
 sudo: false
 branches:
   only:
   - master
 before_deploy:
-- mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
-- export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep
-  -v '\[')
+  - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
 cache:
   directories:
   - "~/.m2/repository"
@@ -32,5 +31,6 @@ install:
 script:
   - mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
 after_success:
-- mvn cobertura:cobertura
-- bash <(curl -s https://codecov.io/bash)
+  - mvn cobertura:cobertura
+  - bash <(curl -s https://codecov.io/bash)
+dist: trusty
