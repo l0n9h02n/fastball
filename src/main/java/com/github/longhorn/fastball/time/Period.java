@@ -2,7 +2,7 @@ package com.github.longhorn.fastball.time;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.annotations.Var;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
 import java.text.ParseException;
@@ -87,7 +87,7 @@ public class Period {
      * @param time       ISO-8601 format time
      * @param startClock start clock for calculating the end time
      * @return Clock of the time.
-     * @throws ParseException Parse Exception will be thrown if the period is invalid
+     * @throws ParseException if the period is invalid
      */
     @Nullable
     private static Clock convert2Clock(String time, @Var Clock startClock) throws ParseException {
