@@ -1,8 +1,12 @@
 package com.github.longhorn.fastball.time;
 
 import com.google.errorprone.annotations.Var;
+import com.tngtech.java.junit.dataprovider.DataProvider;
+import com.tngtech.java.junit.dataprovider.DataProviderRunner;
+import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.text.ParseException;
 import java.util.TimeZone;
@@ -11,7 +15,18 @@ import java.util.concurrent.TimeUnit;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
+@RunWith(DataProviderRunner.class)
 public class PeriodTest {
+
+    @DataProvider
+    public static Object[][] testGetDurationDataProvider() {
+        return new Object[][]{
+                {"2017-01-01/2017-01-02", 1, TimeUnit.DAYS},
+                {"2017-01-01/2017-01-02", 24, TimeUnit.HOURS},
+                {"2017-01-01", 0, TimeUnit.HOURS},
+                {"2017-01-01T00:00:00Z/2017-01-01T10:00:00Z", 10, TimeUnit.HOURS},
+        };
+    }
 
     @Test
     public void testParse() {
@@ -113,5 +128,11 @@ public class PeriodTest {
             System.err.println(ExceptionUtils.getStackTrace(e));
             fail();
         }
+    }
+
+    @Test
+    @UseDataProvider("testGetDurationDataProvider")
+    public void testGetDuration(String period, long duration, TimeUnit timeUnit) throws ParseException {
+        assertThat(Period.parse(period).getDuration(timeUnit)).isEqualTo(duration);
     }
 }

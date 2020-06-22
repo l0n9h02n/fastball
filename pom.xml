@@ -23,6 +23,7 @@
         <javax.ws.rs-api.version>2.1.1</javax.ws.rs-api.version>
         <jersey-common.version>2.27</jersey-common.version>
         <truth.version>0.34</truth.version>
+        <junit-dataprovider.version>1.13.1</junit-dataprovider.version>
     </properties>
     <issueManagement>
         <system>GitHub Issues</system>
@@ -92,6 +93,12 @@
             <groupId>com.google.truth</groupId>
             <artifactId>truth</artifactId>
             <version>${truth.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.java</groupId>
+            <artifactId>junit-dataprovider</artifactId>
+            <version>${junit-dataprovider.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

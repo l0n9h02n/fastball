@@ -2,6 +2,7 @@ package com.github.longhorn.fastball.time;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.annotations.Var;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -213,10 +214,24 @@ public class Period {
      * @return Boolean of the result
      */
     public boolean isTalliedWithDuration(TimeUnit timeUnit, long duration) {
-        if (null == start || null == end) {
+        if (!ObjectUtils.allNotNull(start, end)) {
             return false;
         }
         return (timeUnit.toMillis(duration) == end.toEpochMilli() - start.toEpochMilli());
+    }
+
+    /**
+     * Get the duration of the period.
+     * If the start/end time are not in a pair, or just set the exact time, return 0.
+     *
+     * @param timeUnit the time unit of ther duration
+     * @return the duration time
+     */
+    public long getDuration(TimeUnit timeUnit) {
+        if (!ObjectUtils.allNotNull(start, end)) {
+            return 0;
+        }
+        return timeUnit.convert(end.toEpochMilli() - start.toEpochMilli(), TimeUnit.MILLISECONDS);
     }
 
     /**
